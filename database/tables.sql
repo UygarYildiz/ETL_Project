@@ -1,4 +1,7 @@
 
+DROP TABLE IF EXISTS comments;
+DROP TABLE IF EXISTS posts;
+DROP TABLE IF EXISTS users;
 CREATE TABLE users (
     id serial PRIMARY KEY,
     name VARCHAR (100) NOT NULL,
@@ -7,14 +10,20 @@ CREATE TABLE users (
     email VARCHAR (100) NOT NULL,
     phone VARCHAR (20) NOT NULL,
     website VARCHAR (100) NOT NULL,
-    company_name VARCHAR (100) NOT NULL
+    company_name VARCHAR (100) NOT NULL,
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP NOT NULL
+    
 );
 
 CREATE TABLE posts(
     id serial PRIMARY KEY,
     user_id INT REFERENCES users(id),
     title VARCHAR (200) NOT NULL,
-    body TEXT NOT NULL
+    body TEXT NOT NULL,
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP NOT NULL
+
     
 );
 CREATE TABLE comments(
@@ -22,6 +31,8 @@ CREATE TABLE comments(
     post_id INT REFERENCES posts(id),
     name VARCHAR (100) NOT NULL,
     email VARCHAR (100) NOT NULL,
-    body TEXT NOT NULL
+    body TEXT NOT NULL,
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP NOT NULL
 );
 

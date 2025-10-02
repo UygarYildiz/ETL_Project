@@ -1,2 +1,4 @@
 -- Veri uzunluklarını artırma
-ALTER TABLE users ALTER COLUMN phone TYPE VARCHAR(50);
+DROP TABLE IF EXISTS comments;
+DROP TABLE IF EXISTS posts;
+DROP TABLE IF EXISTS users;
