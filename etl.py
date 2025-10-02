@@ -1,5 +1,4 @@
 import pandas as pd
-from datas import db_engine
 import requests
 import os
 from sqlalchemy import create_engine, text
@@ -52,6 +51,9 @@ def transform_data(users_df, posts_df, comments_df):
 
 def load_data(users_df, posts_df, comments_df):
     try:
+        load_dotenv()
+        db_url=os.getenv("DB_URL")
+        db_engine=create_engine(db_url)
         with db_engine.begin() as connection:
             connection.execute(text("TRUNCATE TABLE comments, posts, users RESTART IDENTITY CASCADE;"))
             users_df.to_sql('users', con=connection, if_exists='append', index=False)
@@ -60,3 +62,8 @@ def load_data(users_df, posts_df, comments_df):
     except Exception as e:
         print(f"Veritabanı Hatası: {e}")
 
+
+def run_etl():
+    users_df, posts_df, comments_df = extract_data()
+    users_df_selected, posts_df, comments_df = transform_data(users_df, posts_df, comments_df)
+    load_data(users_df_selected, posts_df, comments_df)
