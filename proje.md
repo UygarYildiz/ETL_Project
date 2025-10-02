@@ -5,13 +5,13 @@ Bu dosya, JSONPlaceholder API kullanarak ETL projesini gerçekleştirirken izlen
 ---
 
 ## 1. Veri Kaynağını Belirleme (Extract)
-- [ ] JSONPlaceholder API'den 3 endpoint çek:
+- [X] JSONPlaceholder API'den 3 endpoint çek:
   - Users: `https://jsonplaceholder.typicode.com/users`
   - Posts: `https://jsonplaceholder.typicode.com/posts`
   - Comments: `https://jsonplaceholder.typicode.com/comm    ents`
-- [ ] requests kütüphanesi ile veri çekme denemesi yap
-- [ ] Gelen JSON yapısını incele ve nested alanları (address, geo, company) tespit et
-- [ ] Her endpoint için hangi alanlara ihtiyaç olduğunu belirle
+- [X] requests kütüphanesi ile veri çekme denemesi yap
+- [X] Gelen JSON yapısını incele ve nested alanları (address, geo, company) tespit et
+- [X] Her endpoint için hangi alanlara ihtiyaç olduğunu belirle
 
 ---
 
