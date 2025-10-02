@@ -227,9 +227,5 @@ users_df.rename(columns={"address.city": "city", "company.name": "company_name"}
 
 
 
-## 👤 Geliştirici
-
-**Uygar**  
-Data Engineer
 
 
