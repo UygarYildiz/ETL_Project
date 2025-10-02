@@ -4,6 +4,7 @@ import os
 from sqlalchemy import create_engine, text
 from dotenv import load_dotenv
 
+# API'den veri çekme fonksiyonu
 def fetch_data(url,timeout=15):
     try:
         response = requests.get(url,timeout=timeout)
@@ -19,7 +20,26 @@ def fetch_data(url,timeout=15):
         print(f"An error occurred: {e}")
         return {"error": "request_exception"}
 
+## Json placeholder API si ile gelen telfon numaraları çok çeşitli formatlarda geliyor.
+## Bunları sadece rakamlardan oluşan bir formata çevirmek için aşağıdaki fonksiyonu yazdım.
+def clean_usersdata(df):
+    df.drop_duplicates(subset=['id'], keep='first', inplace=True)
+    df['email'] = df['email'].str.lower().str.strip()
+    df['username'] = df['username'].str.lower().str.strip()
+    df['phone'] = df['phone'].str.replace(r'[^0-9+]', '', regex=True)
+    df['website'] = df['website'].str.lower().str.strip()
+    df["email"]=df["email"].str.contains("@", na=False).replace({False: "invalid_email", True: df["email"]})    
+    
+    return df
 
+def clean_commentsdata(df):
+    df.drop_duplicates(subset=['id'], keep='first', inplace=True)
+    df['email'] = df['email'].str.lower().str.strip()
+    df["email"]=df["email"].str.contains("@", na=False).replace({False: "invalid_email", True: df["email"]})    
+    return df
+
+
+# Extract, Transform, Load (ETL) işlemleri
 def extract_data():
     users=fetch_data("https://jsonplaceholder.typicode.com/users")
     posts=fetch_data("https://jsonplaceholder.typicode.com/posts")
@@ -32,6 +52,9 @@ def extract_data():
     return users_df, posts_df, comments_df
 
 
+
+
+# Transform işlemleri
 def transform_data(users_df, posts_df, comments_df):
     users_df.rename(columns={"address.city":"city","company.name":"company_name"}, inplace=True)
     users_df_selected=users_df[[
@@ -43,12 +66,25 @@ def transform_data(users_df, posts_df, comments_df):
         "phone",
         "website",
         "company_name"]].copy()
+    users_df=clean_usersdata(users_df)
+
+
+
+
+
     
     posts_df.rename(columns={"userId":"user_id"}, inplace=True)
     comments_df.rename(columns={"postId":"post_id"}, inplace=True)
     return users_df_selected, posts_df, comments_df
 
 
+
+
+
+
+
+
+# Load işlemleri
 def load_data(users_df, posts_df, comments_df):
     try:
         load_dotenv()
@@ -63,6 +99,10 @@ def load_data(users_df, posts_df, comments_df):
         print(f"Veritabanı Hatası: {e}")
 
 
+
+
+
+# ETL sürecini çalıştır
 def run_etl():
     users_df, posts_df, comments_df = extract_data()
     users_df_selected, posts_df, comments_df = transform_data(users_df, posts_df, comments_df)

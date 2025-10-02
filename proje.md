@@ -16,19 +16,19 @@ Bu dosya, JSONPlaceholder API kullanarak ETL projesini gerçekleştirirken izlen
 ---
 
 ## 2. Veri Tabanı Tasarımı (Load Hedefi)
-- [ ] PostgreSQL üzerinde `jsonplaceholder_db` isimli veri tabanı oluştur
-- [ ] 3 ana tablo tasarla:
+- [x] PostgreSQL üzerinde `jsonplaceholder_db` isimli veri tabanı oluştur
+- [X] 3 ana tablo tasarla:dad
   - `users` (id, name, username, email, phone, website, city, company_name)
   - `posts` (id, user_id, title, body, created_at)
   - `comments` (id, post_id, name, email, body, created_at)
-- [ ] SQL script ile tabloları oluştur
-- [ ] Foreign key ilişkilerini kur (users ↔ posts ↔ comments)
+- [X] SQL script ile tabloları oluştur
+- [X] Foreign key ilişkilerini kur (users ↔ posts ↔ comments)
 
 ---
 
 ## 3. Dönüştürme Adımı (Transform)
-- [ ] JSON → DataFrame dönüştür (`pd.json_normalize()` kullan)
-- [ ] Nested alanları düzleştir (address.city, company.name gibi)
+- [x] JSON → DataFrame dönüştür (`pd.json_normalize()` kullan)
+- [X] Nested alanları düzleştir (address.city, company.name gibi)
 - [ ] Sütun adlarını standartlaştır (snake_case formatına çevir)
 - [ ] Null değerleri temizle veya varsayılan değer ata
 - [ ] Email formatlarını validate et
@@ -116,3 +116,5 @@ Bu dosya, JSONPlaceholder API kullanarak ETL projesini gerçekleştirirken izlen
 - Hata yönetimi ve logging
 - SQL sorgu optimizasyonu
 - Versiyon kontrolü (Git)
+
+
