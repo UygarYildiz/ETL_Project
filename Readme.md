@@ -56,7 +56,7 @@ ETL/
 ### Users Tablosu
 ```sql
 CREATE TABLE users (
-    id INTEGER PRIMARY KEY,
+    id serial PRIMARY KEY,
     name VARCHAR(100),
     username VARCHAR(50),
     city VARCHAR(100),
@@ -72,7 +72,7 @@ CREATE TABLE users (
 ### Posts Tablosu
 ```sql
 CREATE TABLE posts (
-    id INTEGER PRIMARY KEY,
+    id serial PRIMARY KEY,
     user_id INTEGER REFERENCES users(id),
     title VARCHAR(200),
     body TEXT,
@@ -84,7 +84,7 @@ CREATE TABLE posts (
 ### Comments Tablosu
 ```sql
 CREATE TABLE comments (
-    id INTEGER PRIMARY KEY,
+    id serial PRIMARY KEY,
     post_id INTEGER REFERENCES posts(id),
     name VARCHAR(100),
     email VARCHAR(100),
