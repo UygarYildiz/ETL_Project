@@ -1,37 +1,48 @@
-# 📊 ETL Pipeline - JSONPlaceholder API to PostgreSQL
+# 🚀 ETL Pipeline - Apache Airflow + JSONPlaceholder API
 
-Bu proje, **JSONPlaceholder API**'den veri çekerek PostgreSQL veritabanına yükleyen tam otomatik bir **ETL (Extract, Transform, Load)** pipeline'ıdır.
-
----
-
-## 🎯 Proje Amacı
-
-- JSONPlaceholder API'den **users**, **posts** ve **comments** verilerini çekmek
-- Verileri temizlemek ve dönüştürmek
-- PostgreSQL veritabanına **upsert** (insert or update) mantığıyla yüklemek
-- Production-ready, güvenli ve performanslı bir ETL süreci oluşturmak
+Bu proje, **Apache Airflow** ile orkestre edilen, **JSONPlaceholder API**'den veri çekerek PostgreSQL veritabanına yükleyen tam otomatik bir **ETL (Extract, Transform, Load)** pipeline'ıdır.
 
 ---
 
-## 🏗️ Mimari
+## 🎯 Proje Özellikleri
+
+- ✅ **Apache Airflow** ile pipeline orchestration
+- ✅ **Docker Compose** ile tek komutla kurulum
+- ✅ **PostgreSQL** ile veri depolama
+- ✅ **CeleryExecutor** ile paralel task çalıştırma
+- ✅ **Upsert** stratejisi ile veri güncelleme
+- ✅ **Environment Variables** ile güvenli konfigürasyon
+- ✅ Profesyonel **logging** ve hata yönetimi
+
+---
+
+## 🏗️ Sistem Mimarisi
 
 ```
-┌─────────────────┐
-│ JSONPlaceholder │
-│      API        │
-└────────┬────────┘
-         │ Extract
-         ▼
-┌─────────────────┐
-│   Transform     │
-│  (Pandas)       │
-└────────┬────────┘
-         │ Load
-         ▼
-┌─────────────────┐
-│   PostgreSQL    │
-│   Database      │
-└─────────────────┘
+┌─────────────────────────────────────────────────────┐
+│                 Apache Airflow                       │
+│  ┌─────────────┐  ┌──────────────┐  ┌────────────┐ │
+│  │  Scheduler  │  │  Web Server  │  │   Worker   │ │
+│  └─────────────┘  └──────────────┘  └────────────┘ │
+└───────────┬─────────────────────────────────────────┘
+            │
+            ▼
+    ┌───────────────┐
+    │   ETL DAG     │
+    └───────┬───────┘
+            │
+    ┌───────▼────────┬──────────────┬────────────┐
+    │                │              │            │
+    ▼                ▼              ▼            ▼
+┌─────────┐   ┌──────────┐   ┌─────────┐   ┌──────────┐
+│ Extract │→  │Transform │→  │  Load   │→  │PostgreSQL│
+└─────────┘   └──────────┘   └─────────┘   └──────────┘
+    │
+    ▼
+┌──────────────────┐
+│ JSONPlaceholder  │
+│      API         │
+└──────────────────┘
 ```
 
 ---
@@ -40,14 +51,155 @@ Bu proje, **JSONPlaceholder API**'den veri çekerek PostgreSQL veritabanına yü
 
 ```
 ETL/
+├── dags/
+│   └── etl_pipeline.py        # Airflow DAG tanımı
 ├── database/
-│   └── tables.sql          # Veritabanı tablo şemaları
-├── .env                    # Veritabanı bağlantı bilgileri
-├── etl.py                  # Ana ETL pipeline kodu
-├── main.py                 # ETL sürecini başlatan script
-├── requirements.txt        # Python bağımlılıkları
-└── README.md              # Bu dosya
+│   ├── tables.sql             # Veritabanı tablo şemaları
+│   └── tables_updates.sql     # Güncelleme SQL'leri
+├── logs/                      # Airflow logları
+├── plugins/                   # Airflow eklentileri
+├── config/                    # Airflow konfigürasyonları
+├── docker-compose.yaml        # Docker Compose konfigürasyonu
+├── etl.py                     # ETL işlemleri (Extract, Transform, Load)
+├── .env                       # Environment variables
+├── .gitignore                 # Git ignore kuralları
+└── README.md                  # Bu dosya
 ```
+
+---
+
+## 🚀 Hızlı Başlangıç
+
+### 1️⃣ Ön Gereksinimler
+
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (Windows için)
+- [Git](https://git-scm.com/downloads)
+- En az 4GB RAM ve 10GB disk alanı
+
+### 2️⃣ Projeyi İndirin
+
+```powershell
+git clone https://github.com/your-username/ETL.git
+cd ETL
+```
+
+### 3️⃣ Gerekli Klasörleri Oluşturun
+
+```powershell
+mkdir logs, plugins, config
+```
+
+### 4️⃣ Environment Variables Ayarlayın
+
+`.env` dosyası oluşturun:
+
+```bash
+# Airflow User ID
+AIRFLOW_UID=50000
+
+# PostgreSQL Configuration (Airflow Metadata)
+POSTGRES_USER=airflow
+POSTGRES_PASSWORD=airflow
+POSTGRES_DB=airflow
+
+# ETL Database Configuration (Local PostgreSQL)
+DB_HOST=host.docker.internal
+DB_PORT=5432
+DB_NAME=jsonplaceholder_db
+DB_USER=postgres
+DB_PASSWORD=your_password
+DB_URL=postgresql+psycopg2://postgres:your_password@host.docker.internal:5432/jsonplaceholder_db
+```
+
+### 5️⃣ Veritabanı Tablolarını Oluşturun
+
+Local PostgreSQL'de (DBeaver veya pgAdmin ile):
+
+```sql
+-- Veritabanı oluştur
+CREATE DATABASE jsonplaceholder_db;
+
+-- database/tables.sql dosyasını çalıştır
+\i database/tables.sql
+```
+
+### 6️⃣ Airflow'u Başlatın
+
+```powershell
+# Docker volume'lerini temizle (ilk kurulumda)
+docker compose down -v
+
+# Airflow'u başlat
+docker compose up airflow-init
+
+# Tüm servisleri başlat
+docker compose up -d
+```
+
+### 7️⃣ Airflow Web UI'ya Erişin
+
+- **URL**: http://localhost:8080
+- **Kullanıcı adı**: `airflow`
+- **Şifre**: `airflow`
+
+---
+
+## 📊 ETL Süreci Detayları
+
+### 1. **Extract (Veri Çekme)**
+
+```python
+def extract_data():
+    users = fetch_data("https://jsonplaceholder.typicode.com/users")
+    posts = fetch_data("https://jsonplaceholder.typicode.com/posts")
+    comments = fetch_data("https://jsonplaceholder.typicode.com/comments")
+    return users_df, posts_df, comments_df
+```
+
+**Özellikler:**
+- ✅ Timeout kontrolü (15 saniye)
+- ✅ HTTP hata yönetimi
+- ✅ Exception handling
+
+### 2. **Transform (Veri Dönüştürme)**
+
+**Veri Temizleme İşlemleri:**
+- Email formatı kontrolü (`@` işareti zorunlu)
+- Telefon numarası standardizasyonu (sadece rakam ve `+`)
+- Duplicate kayıtları kaldırma
+- Timestamp ekleme (`created_at`, `updated_at`)
+- Nested JSON alanlarını düzleştirme
+
+**Örnek Dönüşümler:**
+```python
+# Email temizleme
+df['email'] = df['email'].str.lower().str.strip()
+df['email'] = np.where(df['email'].str.contains("@"), df['email'], "invalid_email")
+
+# Telefon temizleme
+df['phone'] = df['phone'].str.replace(r'[^0-9+]', '', regex=True)
+
+# Nested field düzleştirme
+df.rename(columns={"address.city": "city", "company.name": "company_name"})
+```
+
+### 3. **Load (Veri Yükleme)**
+
+**Upsert Stratejisi:**
+```sql
+INSERT INTO users(...)
+VALUES (...)
+ON CONFLICT (id) DO UPDATE SET
+    name = EXCLUDED.name,
+    email = EXCLUDED.email,
+    updated_at = EXCLUDED.updated_at
+```
+
+**Avantajları:**
+- Duplicate kayıt oluşturmaz
+- Mevcut kayıtları günceller
+- Yeni kayıtları ekler
+- Atomik işlem (transaction)
 
 ---
 
@@ -56,7 +208,7 @@ ETL/
 ### Users Tablosu
 ```sql
 CREATE TABLE users (
-    id serial PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     name VARCHAR(100),
     username VARCHAR(50),
     city VARCHAR(100),
@@ -72,7 +224,7 @@ CREATE TABLE users (
 ### Posts Tablosu
 ```sql
 CREATE TABLE posts (
-    id serial PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES users(id),
     title VARCHAR(200),
     body TEXT,
@@ -84,7 +236,7 @@ CREATE TABLE posts (
 ### Comments Tablosu
 ```sql
 CREATE TABLE comments (
-    id serial PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     post_id INTEGER REFERENCES posts(id),
     name VARCHAR(100),
     email VARCHAR(100),
@@ -94,138 +246,90 @@ CREATE TABLE comments (
 );
 ```
 
----
 
-
-## 📊 ETL Süreci
-
-### 1. **Extract (Veri Çekme)**
+## 🎛️ Airflow DAG Yapısı
 
 ```python
-# JSONPlaceholder API'den veri çekme
-users = fetch_data("https://jsonplaceholder.typicode.com/users")
-posts = fetch_data("https://jsonplaceholder.typicode.com/posts")
-comments = fetch_data("https://jsonplaceholder.typicode.com/comments")
+@dag(
+    dag_id='etl_pipeline',
+    start_date=datetime(2025, 1, 1),
+    catchup=False
+)
+def etl_pipeline_taskflow():
+    @task
+    def extract():
+        # Extract işlemleri
+        return data
+    
+    @task
+    def transform(data):
+        # Transform işlemleri
+        return transformed_data
+    
+    @task
+    def load(data):
+        # Load işlemleri
+        pass
+    
+    # Task dependencies
+    extracted = extract()
+    transformed = transform(extracted)
+    load(transformed)
 ```
 
-**Özellikler:**
-- ✅ Timeout kontrolü (15 saniye)
-- ✅ HTTP hata yönetimi
-- ✅ Retry mekanizması
+---
+
+## 🔧 Kullanılan Teknolojiler
+
+| Teknoloji | Versiyon | Amaç |
+|-----------|----------|------|
+| **Apache Airflow** | 3.1.0 | Workflow orchestration |
+| **PostgreSQL** | 16 | Veri depolama |
+| **Redis** | 7.2 | Celery message broker |
+| **Python** | 3.x | ETL scripting |
+| **Pandas** | Latest | Veri manipülasyonu |
+| **SQLAlchemy** | Latest | Database ORM |
+| **Docker Compose** | Latest | Container orchestration |
 
 ---
 
-### 2. **Transform (Veri Dönüştürme)**
 
-```python
-# Nested JSON alanlarını düzleştir
-users_df.rename(columns={"address.city": "city", "company.name": "company_name"})
 
-# Veri temizleme
-- Email formatı kontrolü
-- Telefon numarası standardizasyonu
-- Duplicate kayıtları kaldır
-- Timestamp ekleme
-```
-
-**Temizleme Kuralları:**
-- Email: Küçük harfe çevir, @ kontrolü yap
-- Phone: Sadece rakam ve + karakteri bırak
-- Username: Küçük harfe çevir
-- Website: Küçük harfe çevir
 
 ---
 
-### 3. **Load (Veri Yükleme)**
-
-```python
-# Temp tablo kullanarak bulk upsert
-1. DataFrame → Temp tablo
-2. Temp tablo → Ana tablo (ON CONFLICT DO UPDATE)
-3. Temp tabloyu sil
-```
-
-**Upsert Stratejisi:**
-- Çakışma varsa: Güncelle (`updated_at` değişir)
-- Çakışma yoksa: Yeni kayıt ekle
-- Primary key çakışması `ON CONFLICT` ile yönetilir
-
----
-
-## 🔧 Teknik Detaylar
-
-### Kullanılan Teknolojiler
-
-| Teknoloji | Amaç |
-|-----------|------|
-| **Python 3.x** | Ana programlama dili |
-| **Pandas** | Veri manipülasyonu |
-| **SQLAlchemy** | Veritabanı ORM |
-| **psycopg2** | PostgreSQL driver |
-| **requests** | HTTP istekleri |
-| **python-dotenv** | Environment variables |
-
----
-
-### Performans Optimizasyonları
+## 📈 Performans Optimizasyonları
 
 1. **Bulk Insert**: Temp tablo kullanarak tek sorguda tüm kayıtları yükler
-2. **Upsert**: `ON CONFLICT DO UPDATE` ile gereksiz işlemler önlenir
-3. **Batch Processing**: Her tablo için ayrı transaction
+2. **Upsert**: `ON CONFLICT` ile gereksiz işlemler önlenir
+3. **Paralel Execution**: CeleryExecutor ile task'lar paralel çalışır
+4. **Connection Pooling**: SQLAlchemy ile verimli DB bağlantıları
 
+---
 
+## 🔒 Güvenlik
 
-### Güvenlik
-
-✅ **SQL Injection Koruması**
-- Pandas `to_sql()` parametreli sorgu kullanır
-- Kullanıcı input'u yok
-- Dinamik SQL oluşturulmaz
-
-✅ **Veri Doğrulama**
-- Email format kontrolü
-- Duplicate kontrol
-- Null değer yönetimi
+- ✅ **Environment Variables**: Hassas bilgiler `.env` dosyasında
+- ✅ **SQL Injection Koruması**: Parametreli sorgular kullanılır
+- ✅ **Git Ignore**: `.env` dosyası commit edilmez
+- ✅ **Docker Network**: Servisler izole network'te çalışır
 
 ---
 
 ## 📝 Log Örnekleri
 
 ```
-2025-10-02 10:30:15 - INFO - 🚀 ETL süreci başladı
-2025-10-02 10:30:16 - INFO - Extract: API'den veri çekiliyor...
-2025-10-02 10:30:17 - INFO - ✓ 10 users, 100 posts, 500 comments çekildi
-2025-10-02 10:30:18 - INFO - Transform: Veri dönüştürülüyor...
-2025-10-02 10:30:19 - INFO - ✓ Transform tamamlandı
-2025-10-02 10:30:20 - INFO - Load: Raw SQL ile upsert başladı
-2025-10-02 10:30:21 - INFO - ✓ 10 kullanıcı upsert edildi
-2025-10-02 10:30:22 - INFO - ✓ 100 gönderi upsert edildi
-2025-10-02 10:30:23 - INFO - ✓ 500 yorum upsert edildi
-2025-10-02 10:30:24 - INFO - ✅ ETL süreci tamamlandı
+2025-10-03 11:05:15 - INFO - ETL süreci başladı
+2025-10-03 11:05:16 - INFO - Extract: API'den veri çekiliyor...
+2025-10-03 11:05:17 - INFO - ✓ 10 users, 100 posts, 500 comments çekildi
+2025-10-03 11:05:18 - INFO - Transform: Veri dönüştürülüyor...
+2025-10-03 11:05:19 - INFO - ✓ Transform tamamlandı
+2025-10-03 11:05:20 - INFO - Load: Veritabanına yükleniyor...
+2025-10-03 11:05:21 - INFO - Users tablosu güncellendi. (upsert)
+2025-10-03 11:05:22 - INFO - Posts tablosu güncellendi. (upsert)
+2025-10-03 11:05:23 - INFO - Comments tablosu güncellendi. (upsert)
+2025-10-03 11:05:24 - INFO - ✅ ETL süreci tamamlandı
 ```
 
-
-
-### Gelecekteki Özellikler
-
-- [ ] Airflow ile zamanlı çalıştırma (daily/hourly)
-- [ ] Data validation (Great Expectations)
-- [ ] Monitoring dashboard (Grafana)
-- [ ] Error notification (email/Slack)
-- [ ] Docker containerization
-- [ ] CI/CD pipeline (GitHub Actions)
-- [ ] Unit tests
-- [ ] Incremental load (sadece yeni kayıtlar)
-
 ---
-
-## 📌 Notlar
-
-### Veri Kaynağı
-- JSONPlaceholder fake API kullanır (test için)
-- Production'da gerçek API endpoint'leri kullanılmalı
-
-
-
-
 

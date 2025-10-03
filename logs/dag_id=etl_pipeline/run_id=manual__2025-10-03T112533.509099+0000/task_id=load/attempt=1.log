@@ -1,0 +1,18 @@
+{"timestamp":"2025-10-03T11:25:42.085188Z","level":"info","event":"DAG bundles loaded: dags-folder, example_dags","logger":"airflow.dag_processing.bundles.manager.DagBundlesManager","filename":"manager.py","lineno":179}
+{"timestamp":"2025-10-03T11:25:42.086695Z","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/etl_pipeline.py","logger":"airflow.models.dagbag.DagBag","filename":"dagbag.py","lineno":593}
+{"timestamp":"2025-10-03T11:25:42.138049Z","level":"warning","event":"The `airflow.decorators.dag` attribute is deprecated. Please use `'airflow.sdk.dag'`.","category":"DeprecatedImportWarning","filename":"/opt/airflow/dags/etl_pipeline.py","lineno":8,"logger":"py.warnings"}
+{"timestamp":"2025-10-03T11:25:42.138253Z","level":"warning","event":"The `airflow.decorators.task` attribute is deprecated. Please use `'airflow.sdk.task'`.","category":"DeprecatedImportWarning","filename":"/opt/airflow/dags/etl_pipeline.py","lineno":8,"logger":"py.warnings"}
+{"timestamp":"2025-10-03T11:25:42.190175Z","level":"info","event":"Task instance is in running state","logger":"task.stdout"}
+{"timestamp":"2025-10-03T11:25:42.190911Z","level":"info","event":" Previous state of the Task instance: TaskInstanceState.QUEUED","logger":"task.stdout"}
+{"timestamp":"2025-10-03T11:25:42.191391Z","level":"info","event":"Current task name:load","logger":"task.stdout"}
+{"timestamp":"2025-10-03T11:25:42.191669Z","level":"info","event":"Dag name:etl_pipeline","logger":"task.stdout"}
+{"timestamp":"2025-10-03T11:25:42.193112Z","level":"warning","event":"Passing literal json to 'read_json' is deprecated and will be removed in a future version. To read from a literal string, wrap it in a 'StringIO' object.","category":"FutureWarning","filename":"/opt/airflow/dags/etl_pipeline.py","lineno":45,"logger":"py.warnings"}
+{"timestamp":"2025-10-03T11:25:42.209848Z","level":"warning","event":"Passing literal json to 'read_json' is deprecated and will be removed in a future version. To read from a literal string, wrap it in a 'StringIO' object.","category":"FutureWarning","filename":"/opt/airflow/dags/etl_pipeline.py","lineno":46,"logger":"py.warnings"}
+{"timestamp":"2025-10-03T11:25:42.220260Z","level":"warning","event":"Passing literal json to 'read_json' is deprecated and will be removed in a future version. To read from a literal string, wrap it in a 'StringIO' object.","category":"FutureWarning","filename":"/opt/airflow/dags/etl_pipeline.py","lineno":47,"logger":"py.warnings"}
+{"timestamp":"2025-10-03T11:25:42.388489Z","level":"info","event":"Users tablosu güncellendi. (upserst)","logger":"root","filename":"etl.py","lineno":72}
+{"timestamp":"2025-10-03T11:25:42.415924Z","level":"info","event":"Posts tablosu güncellendi. (upsert)","logger":"root","filename":"etl.py","lineno":88}
+{"timestamp":"2025-10-03T11:25:42.467097Z","level":"info","event":"Comments tablosu güncellendi. (upsert)","logger":"root","filename":"etl.py","lineno":106}
+{"timestamp":"2025-10-03T11:25:42.483209Z","level":"info","event":"Done. Returned value was: None","logger":"airflow.task.operators.airflow.providers.standard.decorators.python._PythonDecoratedOperator","filename":"python.py","lineno":218}
+{"timestamp":"2025-10-03T11:25:42.503456Z","level":"info","event":"Task instance in success state","logger":"task.stdout"}
+{"timestamp":"2025-10-03T11:25:42.503969Z","level":"info","event":" Previous state of the Task instance: TaskInstanceState.RUNNING","logger":"task.stdout"}
+{"timestamp":"2025-10-03T11:25:42.504369Z","level":"info","event":"Task operator:<Task(_PythonDecoratedOperator): load>","logger":"task.stdout"}
