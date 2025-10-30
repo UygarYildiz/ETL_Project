@@ -2,6 +2,7 @@
 
 Bu proje, **Apache Airflow** ile orkestre edilen, **JSONPlaceholder API**'den veri çekerek PostgreSQL veritabanına yükleyen tam otomatik bir **ETL (Extract, Transform, Load)** pipeline'ıdır.
 
+
 ---
 
 ## 🎯 Proje Özellikleri
